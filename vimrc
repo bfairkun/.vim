@@ -14,7 +14,9 @@ Plugin 'VundleVim/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 Plugin 'tpope/vim-commentary'
-
+Plugin 'tpope/vim-surround'
+Plugin 'scrooloose/nerdtree'
+Plugin 'airblade/vim-gitgutter'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -56,6 +58,9 @@ noremap <Down> 10j
 " remap whitespace toggle 
 noremap <leader>w :set list!<CR>
 
+" toggle NerdTree file explorer
+map <C-o> :NERDTreeToggle<CR>
+
 " configure expanding of tabs for various file types
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.smk set expandtab
@@ -67,8 +72,8 @@ au BufRead,BufNewFile Makefile* set noexpandtab
 " configure editor with tabs and nice stuff...
 " --------------------------------------------------------------------------------
 set expandtab           " enter spaces when tab is pressed
-set textwidth=120       " break lines when line length increases
 set tabstop=4           " use 4 spaces to represent tab
+set colorcolumn=120     " add colored line at 80 char
 set softtabstop=4
 set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
@@ -93,3 +98,7 @@ nnoremap <leader> :call NumberToggle()<cr>
 
 " always scroll to show some lines below cursor
 set scrolloff=5
+
+" macros
+" macro to insert generic snakemake rule on line below
+let @r = 'okjirule MyRule:	input:	"MyInput"€kboutput:	"MyOutput"€kblog:	""€kbparams:	""€kbshell:	""""""€kb€kbkj'
