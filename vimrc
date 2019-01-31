@@ -1,3 +1,6 @@
+" cheatsheet
+" gt and gT switch tabs back and forth
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -5,7 +8,7 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
@@ -14,9 +17,15 @@ Plugin 'VundleVim/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'scrooloose/nerdtree'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-obsession'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-endwise'
+Plugin 'jiangmiao/auto-pairs'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -32,21 +41,13 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-:imap kj <Esc>
-
-au BufNewFile,BufRead Snakefile set syntax=snakemake
-au BufNewFile,BufRead *.smk set syntax=snakemake
-
-:set wildmenu
-:set listchars=eol:‚èé,tab:¬ª-,trail:¬∑,nbsp:‚éµ
-:set list
-
+" REMAPS
 
 let mapleader = ","
-map <leader><space> :let @/=''<cr> " clear search
 
-map <leader>t :tabn<CR> 
-map <leader>T :tabp<CR> 
+:imap kj <Esc>
+
+map <leader><space> :let @/=''<cr> " clear search
 
 " remap to revert to text state at most recent write
 map <leader>u :earlier 1f
@@ -55,18 +56,39 @@ map <leader>u :earlier 1f
 noremap <Up> 10k
 noremap <Down> 10j
 
-" remap whitespace toggle 
+" remap <C-[hjkl]> to navigate windows
+noremap <C-l> <C-w>l
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+
+" remap whitespace toggle
 noremap <leader>w :set list!<CR>
+
+" list loaded buffers
+nnoremap gb :ls<CR>:b<Space>
 
 " toggle NerdTree file explorer
 map <C-o> :NERDTreeToggle<CR>
 
-" configure expanding of tabs for various file types
+" cycle through buffers
+:nnoremap <Tab> :bnext<CR>
+:nnoremap <S-Tab> :bprevious<CR>
+
+" remap the auto-pairs toggle
+let g:AutoPairsShortcutToggle = '<leader>a'
+
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.smk set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
+
+" add snakemake syntax highlighting
+au BufNewFile,BufRead Snakefile set syntax=snakemake
+au BufNewFile,BufRead *.smk set syntax=snakemake
+
+let g:NERDTreeNodeDelimiter = "\u00a0"
 
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
@@ -77,6 +99,11 @@ set colorcolumn=120     " add colored line at 80 char
 set softtabstop=4
 set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
+
+
+:set wildmenu
+:set listchars=eol:‚èé,tab:¬ª-,trail:¬∑,nbsp:‚éµ
+:set list
 
 " make backspaces more powerfull
 set backspace=indent,eol,start
@@ -94,11 +121,12 @@ function! NumberToggle()
         set relativenumber
     endif
 endfunc
-nnoremap <leader> :call NumberToggle()<cr>
+nnoremap <leader>r :call NumberToggle()<cr>
 
 " always scroll to show some lines below cursor
 set scrolloff=5
 
 " macros
 " macro to insert generic snakemake rule on line below
-let @r = 'okjirule MyRule:	input:	"MyInput"Äkboutput:	"MyOutput"Äkblog:	""Äkbparams:	""Äkbshell:	""""""ÄkbÄkbkj'
+let @r = 'okjirule MyRule:	input:	"MyInput"Äkboutput:	"MyOutput"Äkblog:	""Äkbparams:	""Äkbshell:	""""""ÄkbÄkbkj13k'
+
