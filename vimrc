@@ -52,10 +52,14 @@ map <leader><space> :let @/=''<cr> " clear search
 " remap to revert to text state at most recent write
 map <leader>u :earlier 1f
 
+" remap arrows to faster move arrounds
+noremap <Up> 10k
+noremap <Down> 10j
+
 " " remap Ctrl + arrows to move text arround (via Tpope's unimpaired plugin)
-" nmap <C-Up> [e
-" imap <C-Up> <C-O><C-Up>
-" vmap <C-Up> [egv
+" nmap <C-Up>   [e
+" imap <C-Up>   <C-O><C-Up>
+" vmap <C-Up>   [egv
 " nmap <C-Down> ]e
 " imap <C-Down> <C-O><C-Down>
 " vmap <C-Down> ]egv
