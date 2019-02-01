@@ -52,15 +52,25 @@ map <leader><space> :let @/=''<cr> " clear search
 " remap to revert to text state at most recent write
 map <leader>u :earlier 1f
 
-" remap arrows to faster move arrounds
-noremap <Up> 10k
-noremap <Down> 10j
+" " remap Ctrl + arrows to move text arround (via Tpope's unimpaired plugin)
+" nmap <C-Up> [e
+" imap <C-Up> <C-O><C-Up>
+" vmap <C-Up> [egv
+" nmap <C-Down> ]e
+" imap <C-Down> <C-O><C-Down>
+" vmap <C-Down> ]egv
 
-" remap <C-[hjkl]> to navigate windows
-noremap <C-l> <C-w>l
-noremap <C-h> <C-w>h
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
+" " remap Shift + arrows to move around windows
+" nnoremap <S-Up>      <C-W>K
+" nnoremap <S-Down>    <C-W>J
+" nnoremap <S-Left>    <C-W>H
+" nnoremap <S-Right>   <C-W>L
+
+" " remap <C-[hjkl]> to navigate windows
+" noremap <C-l> <C-w>l
+" noremap <C-h> <C-w>h
+" noremap <C-j> <C-w>j
+" noremap <C-k> <C-w>k
 
 " remap whitespace toggle
 noremap <leader>w :set list!<CR>
