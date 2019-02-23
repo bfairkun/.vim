@@ -1,5 +1,4 @@
 " cheatsheet
-" gt and gT switch tabs back and forth
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -25,6 +24,13 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-endwise'
 Plugin 'jiangmiao/auto-pairs'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+" Plugin 'honza/vim-snippets'
+Plugin 'ervandew/supertab'
+Plugin 'easymotion/vim-easymotion'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -41,13 +47,18 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
 " REMAPS
+
 
 let mapleader = ","
 
 :imap kj <Esc>
 
-map <leader><space> :let @/=''<cr> " clear search
+" clear search
+map <leader><space> :let @/=''<cr>
 
 " remap to revert to text state at most recent write
 map <leader>u :earlier 1f
@@ -56,28 +67,14 @@ map <leader>u :earlier 1f
 noremap <Up> 10k
 noremap <Down> 10j
 
-" " remap Ctrl + arrows to move text arround (via Tpope's unimpaired plugin)
-" nmap <C-Up>   [e
-" imap <C-Up>   <C-O><C-Up>
-" vmap <C-Up>   [egv
-" nmap <C-Down> ]e
-" imap <C-Down> <C-O><C-Down>
-" vmap <C-Down> ]egv
-
-" " remap Shift + arrows to move around windows
-" nnoremap <S-Up>      <C-W>K
-" nnoremap <S-Down>    <C-W>J
-" nnoremap <S-Left>    <C-W>H
-" nnoremap <S-Right>   <C-W>L
-
-" " remap <C-[hjkl]> to navigate windows
-" noremap <C-l> <C-w>l
-" noremap <C-h> <C-w>h
-" noremap <C-j> <C-w>j
-" noremap <C-k> <C-w>k
+" remap <C-[hjkl]> to navigate windows
+nnoremap <C-l> <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
 
 " remap whitespace toggle
-noremap <leader>w :set list!<CR>
+noremap <leader> :set list!<CR>
 
 " list loaded buffers
 nnoremap gb :ls<CR>:b<Space>
@@ -86,11 +83,42 @@ nnoremap gb :ls<CR>:b<Space>
 map <C-o> :NERDTreeToggle<CR>
 
 " cycle through buffers
-:nnoremap <Tab> :bnext<CR>
-:nnoremap <S-Tab> :bprevious<CR>
+nnoremap <leader><Up> :bnext<CR>
+nnoremap <leader><Down> :bprevious<CR>
+nnoremap <leader><Left>  :buffer #<CR>
 
-" remap the auto-pairs toggle
+"  remap the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
+
+nnoremap <leader>n :call NumberToggle()<cr>
+
+" remap SnipMate triggers to not clash with SuperTab
+" snipMateTrigger expands snippets even within another snippet
+:imap <leader><tab> <Plug>snipMateNextOrTrigger
+:smap <leader><tab> <Plug>snipMateNextOrTrigger
+:imap <leader><S-tab> <Plug>snipMateBack
+:smap <leader><S-tab> <Plug>snipMateBack
+:imap <leader><leader><tab> <Plug>snipMateTrigger
+
+" remap easy motion prefix
+map <space> <Plug>(easymotion-prefix)
+
+" repeat previous command in tmux pane 1
+nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
+" repeat previous command in tmux pane 2
+nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
+" cancel command in tmux pane 1
+nnoremap <leader>c :!tmux send-keys -t 1 C-c <CR><CR>
+
+" Zoom in to window, and zoom out to equalize windows
+nnoremap Zz <c-w>_ \| <c-w>\|
+nnoremap Zo <c-w>=
+
+" delete to black hole register
+nnoremap <leader>d "_d
+
+" toggle paste insert mode
+nnoremap <leader>p :set paste!<cr>
 
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.smk set expandtab
@@ -98,11 +126,16 @@ au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
 
+
 " add snakemake syntax highlighting
 au BufNewFile,BufRead Snakefile set syntax=snakemake
 au BufNewFile,BufRead *.smk set syntax=snakemake
 
+autocmd FileType snakemake setlocal commentstring=#\ %s
+
 let g:NERDTreeNodeDelimiter = "\u00a0"
+
+set runtimepath+=~/.vim/my-snippets/
 
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
@@ -115,9 +148,27 @@ set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
 
 
-:set wildmenu
-:set listchars=eol:‚èé,tab:¬ª-,trail:¬∑,nbsp:‚éµ
-:set list
+set wildmenu
+set wildmode=longest,list
+set listchars=eol:‚èé,tab:¬ª-,trail:¬∑,nbsp:‚éµ
+set list
+
+" highlight search
+set hlsearch
+hi Search ctermbg=LightYellow
+hi Search ctermfg=Red
+
+" Damian Conway's Die Blink√´nmatchen: highlight matches
+nnoremap <silent> n n:call HLNext(0.1)<cr>
+nnoremap <silent> N N:call HLNext(0.1)<cr>
+function! HLNext (blinktime)
+  let target_pat = '\c\%#'.@/
+  let ring = matchadd('ErrorMsg', target_pat, 101)
+  redraw
+  exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+  call matchdelete(ring)
+  redraw
+endfunction
 
 " make backspaces more powerfull
 set backspace=indent,eol,start
@@ -135,12 +186,8 @@ function! NumberToggle()
         set relativenumber
     endif
 endfunc
-nnoremap <leader>r :call NumberToggle()<cr>
 
 " always scroll to show some lines below cursor
 set scrolloff=5
 
-" macros
-" macro to insert generic snakemake rule on line below
-let @r = 'okjirule MyRule:	input:	"MyInput"Äkboutput:	"MyOutput"Äkblog:	""Äkbparams:	""Äkbshell:	""""""ÄkbÄkbkj13k'
 
