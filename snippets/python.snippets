@@ -1,0 +1,89 @@
+snippet #! "shebang"
+	#!/usr/bin/env python${1:3}
+
+snippet from
+	from ${1:package} import ${0:module}
+
+# Module Docstring
+snippet docs
+	"""
+	File: ${1:`vim_snippets#Filename('$1.py', 'foo.py')`}
+	Author: `g:snips_author`
+	Email: `g:snips_email`
+	Github: `g:snips_github`
+	Description: ${0}
+	"""
+
+snippet wh
+	while ${1:condition}:
+		${0:${VISUAL}}
+snippet dowh
+	while True:
+		${1}
+		if ${0:condition}:
+			break
+
+snippet with
+	with ${1:expr} as ${2:var}:
+		${0:${VISUAL}}
+
+# New Class
+snippet cl
+	class ${1:ClassName}(${2:object}):
+		"""${3:docstring for $1}"""
+		def __init__(self, ${4:arg}):
+			${5:super($1, self).__init__()}
+			self.$4 = $4
+			${0}
+snippet cla
+	class ${1:class_name}:
+		"""${0:description}"""
+snippet clai
+	class ${1:class_name}:
+		"""${2:description}"""
+		def __init__(self, ${3:args}):
+			${0}
+
+snippet def
+	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):
+		"""${3:docstring for $1}"""
+		${0}
+
+snippet for
+	for ${1:item} in ${2:items}:
+		${0}
+
+snippet cutf8
+	# -*- coding: utf-8 -*-
+
+snippet ld
+	${1:var} = lambda ${2:vars} : ${0:action}
+
+snippet ifmain
+	if __name__ == '__main__':
+		${0:main()}
+
+# argparse
+snippet addp
+	parser = ${VISUAL:argparse.}ArgumentParser()
+snippet addsp
+	${0:sub_parser} = parser.add_subparsers().add_parser("${1:name}")
+snippet addarg
+	parser.add_argument("${0:short_arg}", "${1:long_arg}", default=${2:None}, help="${3:Help text}")
+snippet addnarg
+	parser.add_argument("${0:arg}", nargs="${1:*}", default"${2:None}, help="${3:Help text}")
+snippet addaarg
+	parser.add_argument("${0:arg}", "${1:long_arg}", action="${2:store_true}", default=${3:False}, help="${4:Help text}")
+snippet pargs
+	"${VISUAL:return }"parser.parse_args()
+
+# comprehensions
+snippet lcp list comprehension
+	[${1} for ${2} in ${3:${VISUAL}}]${0}
+
+snippet dcp dict comprehension
+	{${1}: ${2} for ${3} in ${4:${VISUAL}}}${0}
+
+snippet scp set comprehension
+	{${1} for ${2} in ${3:${VISUAL}}}${0}
+

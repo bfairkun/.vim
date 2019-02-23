@@ -1,0 +1,75 @@
+# Global snippets
+snippet sbatch
+	#SBATCH --job-name=${1:jobname}
+	#SBATCH --output=${2:/home/bjf79/slurm_stdout_logs/$1}
+	#SBATCH --time=${3:1-00:00:00}
+	#SBATCH --partition=${4:broadwl}
+	#SBATCH --mem=${5:4000}
+	#SBATCH --tasks-per-node=${6:4}
+
+snippet swrap "inline slurm submission with --wrap flag"
+	sbatch --output=/home/bjf79/slurm_stdout_logs/${2:wrap} --partition=${3:broadwl} --mem=${4:2000} --time=${5:2:00:00} --wrap="${1}"
+
+snippet perlsed "perl regex power used like sed"
+	perl -lne '$_ =~ m/${1:RegexToMatch}/; print "${2:CanPrintOutCaptureGroups}"'
+
+snippet perlawk "perl regex power used like awk with autosplit"
+	perl -F"\t" -lane 'F[0] =~ m/${1:RegexToMatch}/; print "${2:CanPrintOutCaptureGroups}"'
+snippet awk "basic awk command"
+	awk ${1:-F'\t'} '${2:$} {print ${3:$}}'
+
+# (c) holds no legal value ;)
+snippet c)
+	Copyright `&enc[:2] == "utf" ? "©" : "(c)"` `strftime("%Y")` ${1:`g:snips_author`}. All Rights Reserved.
+snippet date
+	`strftime("%Y-%m-%d")`
+snippet ddate
+	`strftime("%B %d, %Y")`
+snippet diso
+	`strftime("%Y-%m-%dT%H:%M:%S")`
+snippet time
+	`strftime("%H:%M")`
+snippet datetime
+	`strftime("%Y-%m-%d %H:%M")`
+snippet lorem
+	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+snippet GPL2
+	${1:One line to give the program's name and a brief description.}
+	Copyright `&enc[:2] == "utf" ? "©" : "(c)"` `strftime("%Y")` ${2:`g:snips_author`}
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, see <http://www.gnu.org/licenses/>.
+	${0}
+snippet MIT
+	${1:one line to give the program's name and a brief description}
+	Copyright `&enc[:2] == "utf" ? "©" : "(c)"` `strftime("%Y")` ${2:`g:snips_author`}
+
+	Permission is hereby granted, free of charge, to any person obtaining
+	a copy of this software and associated documentation files (the "Software"),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included
+	in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+	OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+	IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+	DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+	TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+	OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	${0}
+

@@ -1,0 +1,16 @@
+extends python
+
+snippet rule
+	rule ${1:rname}:
+		input:
+			${2:input}
+		output:
+			${3:output}
+		log:
+			${4:log}
+		shell:
+			"""
+			${5:shell}
+			"""
+
+
