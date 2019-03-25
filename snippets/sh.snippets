@@ -1,1 +1,9 @@
+snippet #! "shebang"
+	#!/usr/bin/env bash
 
+snippet fileloop "loop through files given at command line"
+	for MYFILE in "$@"
+	do
+		# samplename=$(basename -s ".fastq.gz" $MYFILE)
+		# echo "processing $samplename..."
+	done

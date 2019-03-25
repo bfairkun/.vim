@@ -24,7 +24,6 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-endwise'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
@@ -63,9 +62,9 @@ map <leader><space> :let @/=''<cr>
 " remap to revert to text state at most recent write
 map <leader>u :earlier 1f
 
-" remap arrows to faster move arrounds
-noremap <Up> 10k
-noremap <Down> 10j
+" remap up/down arrows to move page (but not cursor)
+noremap <Up> <C-y>
+noremap <Down> <C-e>
 
 " remap <C-[hjkl]> to navigate windows
 nnoremap <C-l> <C-w>l
@@ -86,6 +85,10 @@ map <C-o> :NERDTreeToggle<CR>
 nnoremap <leader><Up> :bnext<CR>
 nnoremap <leader><Down> :bprevious<CR>
 nnoremap <leader><Left>  :buffer #<CR>
+
+" use xclip to interact with local clipboard while vim is run on remote ssh session
+vmap "+y :!xclip -f -sel clip
+map "+p :r!xclip -o -sel clip
 
 "  remap the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
@@ -152,6 +155,7 @@ set wildmenu
 set wildmode=longest,list
 set listchars=eol:⏎,tab:»-,trail:·,nbsp:⎵
 set list
+set mouse=a
 
 " highlight search
 set hlsearch

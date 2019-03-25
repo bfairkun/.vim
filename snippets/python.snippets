@@ -77,6 +77,29 @@ snippet addaarg
 snippet pargs
 	"${VISUAL:return }"parser.parse_args()
 
+snippet text_CLI "description"
+	import argparse
+	import sys
+	parser = argparse.ArgumentParser(description="Process <FileIn>. Output <FileOut>")
+	parser.add_argument('-I','--FileIn',  default="-", help="REQUIRED. Use 'stdin' or '-' to read from stdin", required=True)
+	parser.add_argument('-O', '--FileOut', default="-", help="REQUIRED. Use 'stdout' or '-' to write to stdout", required=True)
+	parser.add_argument("--quiet", help="OPTIONAL. quiet the output verbosity", action="store_true")
+	args = parser.parse_args()
+
+
+	if args.FileIn in ("stdin", "-"):
+		fhIn = sys.stdin
+	else:
+		fhIn = open(FileIn, 'rU')
+
+	if args.FileOut in ("stdout", "-"):
+		fhOut = sys.stdout
+	else:
+		fhIn = open(FileOut, 'rU')
+
+	for line in fhIn:
+		print(line)
+
 # comprehensions
 snippet lcp list comprehension
 	[${1} for ${2} in ${3:${VISUAL}}]${0}
