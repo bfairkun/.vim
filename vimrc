@@ -53,7 +53,7 @@ set omnifunc=syntaxcomplete#Complete
 " slime plugin preferences
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
-
+let g:slime_no_mappings = 1
 
 " REMAPS
 
@@ -62,11 +62,18 @@ let mapleader = ","
 
 :imap kj <Esc>
 
+" slime remaps
+xmap <leader>s <Plug>SlimeRegionSend
+nmap <leader>s <Plug>SlimeParagraphSend
+nmap <leader>sl <Plug>SlimeLineSend
+nmap <leader>sc :SlimeConfig<cr>
+nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
 " clear search
 map <leader><space> :let @/=''<cr>
 
 " remap to revert to text state at most recent write
-map <leader>u :earlier 1f
+nnoremap <leader>u :earlier 1f
 
 " remap up/down arrows to move page (but not cursor)
 noremap <Up> <C-y>
@@ -79,7 +86,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 
 " remap whitespace toggle
-noremap <leader> :set list!<CR>
+noremap <leader>w :set list!<CR>
 
 " list loaded buffers
 nnoremap gb :ls<CR>:b<Space>
