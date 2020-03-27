@@ -93,6 +93,7 @@ map "+p :r!xclip -o -sel clip
 "  remap the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
 
+nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
 
 " remap SnipMate triggers to not clash with SuperTab
@@ -113,6 +114,7 @@ nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
 " cancel command in tmux pane 1
 nnoremap <leader>c :!tmux send-keys -t 1 C-c <CR><CR>
 
+set mouse=a
 " Zoom in to window, and zoom out to equalize windows
 nnoremap Zz <c-w>_ \| <c-w>\|
 nnoremap Zo <c-w>=
@@ -188,6 +190,17 @@ function! NumberToggle()
         set norelativenumber
     else
         set relativenumber
+    endif
+endfunc
+
+function! ToggleMouse()
+    " check if mouse is enabled
+    if &mouse == 'a'
+        " disable mouse
+        set mouse=
+    else
+        " enable mouse everywhere
+        set mouse=a
     endif
 endfunc
 
