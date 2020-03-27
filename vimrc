@@ -30,6 +30,7 @@ Plugin 'garbas/vim-snipmate'
 " Plugin 'honza/vim-snippets'
 Plugin 'ervandew/supertab'
 Plugin 'easymotion/vim-easymotion'
+Plugin 'jpalardy/vim-slime.git'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -48,6 +49,11 @@ filetype plugin indent on    " required
 
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
+
+" slime plugin preferences
+let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
+
 
 " REMAPS
 
