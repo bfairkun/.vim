@@ -68,6 +68,8 @@ nmap <leader>s <Plug>SlimeParagraphSend
 nmap <leader>sl <Plug>SlimeLineSend
 nmap <leader>sc :SlimeConfig<cr>
 nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
+" slime send full file and return cursor to position
+nmap <leader>sa mzggvG<leader>s`z
 
 " clear search
 map <leader><space> :let @/=''<cr>
