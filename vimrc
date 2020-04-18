@@ -31,6 +31,7 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'ervandew/supertab'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
+Plugin 'tibabit/vim-templates'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -70,6 +71,8 @@ nmap <leader>sc :SlimeConfig<cr>
 nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " slime send full file and return cursor to position
 nmap <leader>sa mzggvG<leader>s`z
+" slime send kill ctl-c
+nmap <leader>sk :SlimeSend0 "\x15"<CR>
 
 " clear search
 map <leader><space> :let @/=''<cr>
