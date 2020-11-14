@@ -1,4 +1,3 @@
-" cheatsheet
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -23,12 +22,12 @@ Plugin 'tpope/vim-obsession'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-fugitive'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'
 " Plugin 'honza/vim-snippets'
-Plugin 'ervandew/supertab'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
 Plugin 'tibabit/vim-templates'
@@ -63,6 +62,9 @@ let mapleader = ","
 
 :imap kj <Esc>
 
+" Change dir to current file's dir
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
 " slime remaps
 xmap <leader>s <Plug>SlimeRegionSend
 nmap <leader>s <Plug>SlimeParagraphSend
@@ -72,7 +74,7 @@ nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " slime send full file and return cursor to position
 nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
-nmap <leader>sk :SlimeSend0 "\x15"<CR>
+nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
 
 " clear search
 map <leader><space> :let @/=''<cr>
@@ -104,9 +106,10 @@ nnoremap <leader><Up> :bnext<CR>
 nnoremap <leader><Down> :bprevious<CR>
 nnoremap <leader><Left>  :buffer #<CR>
 
-" use xclip to interact with local clipboard while vim is run on remote ssh session
-vmap "+y :!xclip -f -sel clip
-map "+p :r!xclip -o -sel clip
+" use pbcopy to interact with local clipboard while vim is run on remote ssh session
+vmap <C-x> :!pbcopy<CR>
+vmap <C-c> :w !pbcopy<CR><CR>
+vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
 "  remap the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
