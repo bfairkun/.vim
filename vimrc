@@ -71,7 +71,10 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 " git status
 nnoremap <leader>gs :G<CR>
 " git commit
-nnoremap <leader>gc :Gcommit<CR>
+nnoremap <leader>gc :Gcommit -v<CR>
+nnoremap <space>gm :Gmove<Space>
+nnoremap <space>gb :Git branch<Space>
+nnoremap <space>go :Git checkout<Space>
 
 " vimdiff remaps to resolve merge conflicts
 " get left window (HEAD copy) into working copy
