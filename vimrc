@@ -67,6 +67,18 @@ let mapleader = ","
 " Change dir to current file's dir
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
+" fugitive remaps
+" git status
+nnoremap <leader>gs :G<CR>
+" git commit
+nnoremap <leader>gc :Gcommit<CR>
+
+" vimdiff remaps to resolve merge conflicts
+" get left window (HEAD copy) into working copy
+nmap <leader>g<left> :diffget //2
+" get right window (merge copy) into working copy
+nmap <leader>g<right> :diffget //3
+
 " slime remaps
 xmap <leader>s <Plug>SlimeRegionSend
 nmap <leader>s <Plug>SlimeParagraphSend
