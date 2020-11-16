@@ -31,6 +31,8 @@ Plugin 'garbas/vim-snipmate'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
 Plugin 'tibabit/vim-templates'
+Plugin 'bkad/camelcasemotion'
+Plugin 'roxma/vim-paste-easy'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -92,8 +94,8 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 
-" remap whitespace toggle
-noremap <leader>w :set list!<CR>
+" remap view invisible whitespace toggle
+noremap <leader>i :set list!<CR>
 
 " list loaded buffers
 nnoremap gb :ls<CR>:b<Space>
@@ -113,6 +115,8 @@ vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res
 
 "  remap the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
+
+let g:camelcasemotion_key = '<leader>'
 
 nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
@@ -142,9 +146,6 @@ nnoremap Zo <c-w>=
 
 " delete to black hole register
 nnoremap <leader>d "_d
-
-" toggle paste insert mode
-nnoremap <leader>p :set paste!<cr>
 
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.smk set expandtab
