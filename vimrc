@@ -33,6 +33,7 @@ Plugin 'jpalardy/vim-slime.git'
 Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
 Plugin 'roxma/vim-paste-easy'
+Plugin 'tpope/vim-rhubarb'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
