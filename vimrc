@@ -1,3 +1,4 @@
+" VUNDLE PLUGIN MANAGER
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -26,7 +27,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
+" Plugin 'garbas/vim-snipmate'
 " Plugin 'honza/vim-snippets'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
@@ -34,6 +35,8 @@ Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
 Plugin 'roxma/vim-paste-easy'
 Plugin 'tpope/vim-rhubarb'
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -53,13 +56,38 @@ filetype plugin indent on    " required
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
+" SET PLUGIN PREFERENCES AND VARIABLES
+
 " slime plugin preferences
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
 let g:slime_no_mappings = 1
 
-" REMAPS
+" To make YouCompleteMe play nice with Ultisnips, use Ctl-N Ctl-P for
+" YouCompleteMe autocompletion, and use Tab to expand and move through
+" snippets
+let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 
+" close YCM preview after leaving insert mode
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" do not close YCM preview after accepting completion
+let g:ycm_autoclose_preview_window_after_completion = 0
+
+" map the auto-pairs toggle
+let g:AutoPairsShortcutToggle = '<leader>a'
+
+" move through camel case words with leader
+let g:camelcasemotion_key = '<leader>'
+
+let g:NERDTreeNodeDelimiter = "\u00a0"
+
+
+" REMAPS
 
 let mapleader = ","
 
@@ -73,9 +101,9 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 nnoremap <leader>gs :G<CR>
 " git commit
 nnoremap <leader>gc :Gcommit -v<CR>
-nnoremap <space>gm :Gmove<Space>
-nnoremap <space>gb :Git branch<Space>
-nnoremap <space>go :Git checkout<Space>
+nnoremap <leader>gm :Gmove<Space>
+nnoremap <leader>gb :Git branch<Space>
+nnoremap <leader>go :Git checkout<Space>
 
 " vimdiff remaps to resolve merge conflicts
 " get left window (HEAD copy) into working copy
@@ -129,22 +157,10 @@ vmap <C-x> :!pbcopy<CR>
 vmap <C-c> :w !pbcopy<CR><CR>
 vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
 
-"  remap the auto-pairs toggle
-let g:AutoPairsShortcutToggle = '<leader>a'
-
-let g:camelcasemotion_key = '<leader>'
-
+" custom functions that toggle something
 nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
-
-" remap SnipMate triggers to not clash with SuperTab
-" snipMateTrigger expands snippets even within another snippet
-:imap <leader><tab> <Plug>snipMateNextOrTrigger
-:smap <leader><tab> <Plug>snipMateNextOrTrigger
-:imap <leader><S-tab> <Plug>snipMateBack
-:smap <leader><S-tab> <Plug>snipMateBack
-:imap <leader><leader><tab> <Plug>snipMateTrigger
-
+nnoremap <leader>Y :call ToggleYCM()<cr>
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
 
@@ -155,31 +171,12 @@ nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
 " cancel command in tmux pane 1
 nnoremap <leader>c :!tmux send-keys -t 1 C-c <CR><CR>
 
-set mouse=a
 " Zoom in to window, and zoom out to equalize windows
 nnoremap Zz <c-w>_ \| <c-w>\|
 nnoremap Zo <c-w>=
 
 " delete to black hole register
 nnoremap <leader>d "_d
-
-au BufRead,BufNewFile *.py set expandtab
-au BufRead,BufNewFile *.smk set expandtab
-au BufRead,BufNewFile *.c set noexpandtab
-au BufRead,BufNewFile *.h set noexpandtab
-au BufRead,BufNewFile Makefile* set noexpandtab
-
-
-" add snakemake syntax highlighting
-au BufNewFile,BufRead Snakefile set syntax=snakemake
-au BufNewFile,BufRead *.smk set syntax=snakemake
-
-autocmd FileType snakemake setlocal commentstring=#\ %s
-
-let g:NERDTreeNodeDelimiter = "\u00a0"
-
-set runtimepath+=~/.vim/my-snippets/
-
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
 " --------------------------------------------------------------------------------
@@ -202,6 +199,22 @@ set hlsearch
 hi Search ctermbg=LightYellow
 hi Search ctermfg=Red
 
+au BufRead,BufNewFile *.py set expandtab
+au BufRead,BufNewFile *.smk set expandtab
+au BufRead,BufNewFile *.c set noexpandtab
+au BufRead,BufNewFile *.h set noexpandtab
+au BufRead,BufNewFile Makefile* set noexpandtab
+
+
+" add snakemake syntax highlighting
+au BufNewFile,BufRead Snakefile set syntax=snakemake
+au BufNewFile,BufRead *.smk set syntax=snakemake
+
+autocmd FileType snakemake setlocal commentstring=#\ %s
+
+
+set runtimepath+=~/.vim/my-snippets/
+
 " Damian Conway's Die Blinkënmatchen: highlight matches
 nnoremap <silent> n n:call HLNext(0.1)<cr>
 nnoremap <silent> N N:call HLNext(0.1)<cr>
@@ -217,11 +230,16 @@ endfunction
 " make backspaces more powerfull
 set backspace=indent,eol,start
 
-set ruler                           " show line and column number
+set ruler               " show line and column number
 syntax on               " syntax highlighting
 set showcmd             " show (partial) command in status line
+set number              " Show current line number
+"
+" always scroll to show some lines below cursor
+set scrolloff=5
 
-set number                     " Show current line number
+" FUNCTIONS
+"
 " function and to toggle relative and absolute number
 function! NumberToggle()
     if(&relativenumber == 1)
@@ -242,7 +260,10 @@ function! ToggleMouse()
     endif
 endfunc
 
-" always scroll to show some lines below cursor
-set scrolloff=5
-
-
+function! ToggleYCM()
+    if(g:ycm_auto_trigger == 1)
+        let g:ycm_auto_trigger=0
+    else
+        let g:ycm_auto_trigger=1
+    endif
+endfunc
