@@ -8,7 +8,8 @@ Note that some plugins (YouCompleteMe and UltiSnps) require vim installed with p
 
 ```bash
 git clone https://github.com/vim/vim.git && cd vim
-./configure --enable-pythoninterp --prefix=$HOME
+./configure --prefix=$HOME/pkg/stow/vim/ --enable-pythoninterp --enable-python3interp
+ --prefix=$HOME
 make && make install
 ```
 
