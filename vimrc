@@ -35,10 +35,10 @@ Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
 Plugin 'roxma/vim-paste-easy'
 Plugin 'tpope/vim-rhubarb'
-if v:version == 801
+if v:version == 801 && has('python3')
     Plugin 'bfairkun/YouCompleteMe'
 endif
-if v:version >= 802
+if v:version >= 802 && has('python3')
     Plugin 'ycm-core/YouCompleteMe'
 endif
 Plugin 'SirVer/ultisnips'
