@@ -12,4 +12,4 @@ Note that some plugins (YouCompleteMe and UltiSnps) require vim installed with p
 module load vim/8.1
 ```
 
-Then start vim, and `:PluginInstall` to fetch plugins. Note that the YouCompleteMe plugin references my personal fork of the official YouCompleteMe repo, which I reset to an old commit which is compatible with vim8.1 (as opposed to the current official YouCompleteMe which requires vim8.2 and is more difficult to install on Midway). Finish installation by navigating to `bundle/YouCompleteMe/` and run  `python setup.py` to finish installation of YouCompleteMe.
+Then start vim, and `:PluginInstall` to fetch plugins. Note that the YouCompleteMe plugin references my personal fork of the official YouCompleteMe repo, which I reset to an old commit which is compatible with vim8.1 (as opposed to the current official YouCompleteMe which requires vim8.2 and is more difficult to install on Midway). Finish installation by navigating to `bundle/YouCompleteMe/` and run  `python install.py` to finish installation of YouCompleteMe.
