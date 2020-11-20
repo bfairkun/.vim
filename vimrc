@@ -35,8 +35,12 @@ Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
 Plugin 'roxma/vim-paste-easy'
 Plugin 'tpope/vim-rhubarb'
-" Plugin 'bfairkun/YouCompleteMe'
-Plugin 'ycm-core/YouCompleteMe'
+if v:version == 801
+    Plugin 'bfairkun/YouCompleteMe'
+endif
+if v:version >= 802
+    Plugin 'ycm-core/YouCompleteMe'
+endif
 Plugin 'SirVer/ultisnips'
 
 " All of your Plugins must be added before the following line
