@@ -27,7 +27,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-" Plugin 'garbas/vim-snipmate'
 " Plugin 'honza/vim-snippets'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
@@ -35,6 +34,8 @@ Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
 Plugin 'roxma/vim-paste-easy'
 Plugin 'tpope/vim-rhubarb'
+Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'vim-scripts/CycleColor'
 if v:version == 801 && has('python3')
     Plugin 'bfairkun/YouCompleteMe'
 endif
@@ -89,6 +90,9 @@ let g:AutoPairsShortcutToggle = '<leader>a'
 " move through camel case words with leader
 let g:camelcasemotion_key = '<leader>'
 
+" Github style markdown previews. Uses python grip to render markdown
+let vim_markdown_preview_github=1
+
 let g:NERDTreeNodeDelimiter = "\u00a0"
 
 
@@ -130,6 +134,10 @@ nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
 " clear search
 map <leader><space> :let @/=''<cr>
 
+" Cycle through colorschemes
+nnoremap <leader>c<right> :CycleColorNext<cr>
+nnoremap <leader>c<left> :CycleColorPrev<cr>
+
 " remap to revert to text state at most recent write
 nnoremap <leader>u :earlier 1f
 
@@ -160,7 +168,7 @@ nnoremap <leader><Left>  :buffer #<CR>
 " use pbcopy to interact with local clipboard while vim is run on remote ssh session
 vmap <C-x> :!pbcopy<CR>
 vmap <C-c> :w !pbcopy<CR><CR>
-vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR>
+vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR> <bar> "*y
 
 " custom functions that toggle something
 nnoremap <leader>m :call ToggleMouse()<cr>
