@@ -25,8 +25,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-fugitive'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
 " Plugin 'honza/vim-snippets'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
@@ -36,6 +34,8 @@ Plugin 'roxma/vim-paste-easy'
 Plugin 'tpope/vim-rhubarb'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'vim-scripts/CycleColor'
+Plugin 'vim-airline/vim-airline'
+Plugin 'mbbill/undotree'
 if v:version == 801 && has('python3')
     Plugin 'bfairkun/YouCompleteMe'
 endif
@@ -116,9 +116,9 @@ nnoremap <leader>go :Git checkout<Space>
 
 " vimdiff remaps to resolve merge conflicts
 " get left window (HEAD copy) into working copy
-nmap <leader>g<left> :diffget //2
+nnoremap <leader>g<left> :diffget //2
 " get right window (merge copy) into working copy
-nmap <leader>g<right> :diffget //3
+nnoremap <leader>g<right> :diffget //3
 
 " slime remaps
 xmap <leader>s <Plug>SlimeRegionSend
@@ -131,15 +131,15 @@ nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
 nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
 
+" Toggle undo tree
+nnoremap <leader>u :UndotreeToggle<CR>
+
 " clear search
 map <leader><space> :let @/=''<cr>
 
 " Cycle through colorschemes
 nnoremap <leader>c<right> :CycleColorNext<cr>
 nnoremap <leader>c<left> :CycleColorPrev<cr>
-
-" remap to revert to text state at most recent write
-nnoremap <leader>u :earlier 1f
 
 " remap up/down arrows to move page (but not cursor)
 noremap <Up> <C-y>
@@ -156,6 +156,9 @@ noremap <leader>i :set list!<CR>
 
 " list loaded buffers
 nnoremap gb :ls<CR>:b<Space>
+
+" List contents of all registers (that typically contain pasteable text).
+nnoremap <silent> "" :registers "0123456789abcdefghijklmnopqrstuvwxyz*+.<CR>
 
 " toggle NerdTree file explorer
 map <C-o> :NERDTreeToggle<CR>
@@ -174,6 +177,7 @@ vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res
 nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
 nnoremap <leader>Y :call ToggleYCM()<cr>
+
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
 
@@ -190,6 +194,7 @@ nnoremap Zo <c-w>=
 
 " delete to black hole register
 nnoremap <leader>d "_d
+
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
 " --------------------------------------------------------------------------------
@@ -280,3 +285,9 @@ function! ToggleYCM()
         let g:ycm_auto_trigger=1
     endif
 endfunc
+
+" OTHER THINGS
+if has("persistent_undo")
+    set undodir=~/.vim/undodir
+    set undofile
+endif
