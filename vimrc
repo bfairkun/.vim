@@ -37,6 +37,7 @@ Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'vim-scripts/CycleColor'
 Plugin 'vim-airline/vim-airline'
 Plugin 'mbbill/undotree'
+Plugin 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/'}
 if v:version == 801 && has('python3')
     Plugin 'bfairkun/YouCompleteMe'
 endif
@@ -95,7 +96,7 @@ let g:camelcasemotion_key = '<leader>'
 let vim_markdown_preview_github=1
 
 " insert comment characters at column 1 regardless of indentation.
-let b:commentary_startofline = 1
+" let g:commentary_startofline = 1
 
 let g:NERDTreeNodeDelimiter = "\u00a0"
 
@@ -230,12 +231,9 @@ au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
 
-
-" add snakemake syntax highlighting
-au BufNewFile,BufRead Snakefile set syntax=snakemake
-au BufNewFile,BufRead *.smk set syntax=snakemake
-
-autocmd FileType snakemake setlocal commentstring=#\ %s
+set foldlevelstart=20 "start with folds open
+autocmd Syntax c,cpp,vim,xml,html,xhtml,snakemake setlocal foldmethod=syntax
+autocmd Syntax c,cpp,vim,xml,html,xhtml,perl,snakemake normal zR
 
 set runtimepath+=~/.vim/my-snippets/
 
