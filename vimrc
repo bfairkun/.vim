@@ -31,7 +31,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'jpalardy/vim-slime.git'
 Plugin 'tibabit/vim-templates'
 Plugin 'bkad/camelcasemotion'
-Plugin 'roxma/vim-paste-easy'
+Plugin 'ConradIrwin/vim-bracketed-paste'
 Plugin 'tpope/vim-rhubarb'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'vim-scripts/CycleColor'
@@ -93,6 +93,9 @@ let g:camelcasemotion_key = '<leader>'
 
 " Github style markdown previews. Uses python grip to render markdown
 let vim_markdown_preview_github=1
+
+" insert comment characters at column 1 regardless of indentation.
+let b:commentary_startofline = 1
 
 let g:NERDTreeNodeDelimiter = "\u00a0"
 
@@ -233,7 +236,6 @@ au BufNewFile,BufRead Snakefile set syntax=snakemake
 au BufNewFile,BufRead *.smk set syntax=snakemake
 
 autocmd FileType snakemake setlocal commentstring=#\ %s
-
 
 set runtimepath+=~/.vim/my-snippets/
 
