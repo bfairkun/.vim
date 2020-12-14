@@ -1,3 +1,6 @@
+" Ben's vimrc
+" PLUGINS {{{
+
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
 " - Avoid using standard Vim directory names like 'plugin'
@@ -39,9 +42,8 @@ Plug 'SirVer/ultisnips'
 " Initialize plugin system
 call plug#end()
 
-set omnifunc=syntaxcomplete#Complete
-
-" SET PLUGIN PREFERENCES AND VARIABLES
+" }}}
+" PLUGIN PREFERENCES AND GLOBAL VARIABLES {{{
 
 " slime plugin preferences
 let g:slime_target = "tmux"
@@ -84,15 +86,35 @@ let R_openhtml = 1
 " Rmd chunk header syntax highlighting
 let rrst_syn_hl_chunk = 1
 let rmd_syn_hl_chunk = 1
+let R_clear_line = 1
+let R_objbr_place = 'console,right'
+" Open object browser and move to window up after starting R
+let R_after_start = [':execute "normal ;ro"', ':wincmd k']
+
+" custom ctags
+let g:tagbar_type_r = {
+    \ 'ctagstype' : 'r',
+    \ 'kinds'     : [
+        \ 'f:Functions',
+        \ 'g:GlobalVariables',
+        \ 'v:FunctionVariables',
+    \ ]
+\ }
+
+let g:tagbar_type_snakemake = {
+    \ 'ctagstype' : 'snakemake',
+    \ 'kinds'     : [
+        \ 'r:rules',
+    \ ]
+\ }
 
 
-" let R_user_maps_only = 1
-
-" REMAPS
-
+" }}}
+" SET LEADER KEY {{{
 let mapleader = ","
 let maplocalleader = ";"
-
+" }}}
+" NORMAL+VISUAL MODE REMAPS {{{
 imap kj <Esc>
 
 " Change dir to current file's dir
@@ -127,7 +149,6 @@ nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
 nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
 
-
 " nvim-R remaps
 " Send code to R console
 vmap <localleader><Space> <Plug>RDSendSelection
@@ -157,6 +178,10 @@ nnoremap <leader>T :%s/ \+/\t/g<CR>
 " Cycle through colorschemes
 nnoremap <leader>c<right> :CycleColorNext<cr>
 nnoremap <leader>c<left> :CycleColorPrev<cr>
+
+" Damian Conway's Die Blinkënmatchen: highlight matches
+nnoremap <silent> n n:call HLNext(0.1)<cr>
+nnoremap <silent> N N:call HLNext(0.1)<cr>
 
 " remap up/down arrows to move page (but not cursor)
 noremap <Up> <C-y>
@@ -189,9 +214,11 @@ nnoremap <leader><Left>  :buffer #<CR>
 nnoremap <leader>q :q<CR>
 
 " use pbcopy to interact with local clipboard while vim is run on remote ssh session
-vmap <C-x> :!pbcopy<CR>
-vmap <C-c> :w !pbcopy<CR><CR>
-vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR> <bar> "*y
+if executable('pbcopy')
+    vmap <C-x> :!pbcopy<CR>
+    vmap <C-c> :w !pbcopy<CR><CR>
+    vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR> <bar> "*y
+endif
 
 " custom functions that toggle something
 nnoremap <leader>m :call ToggleMouse()<cr>
@@ -228,14 +255,12 @@ if has('nvim') ||  v:version >= 801
     tnoremap <C-j> <c-\><c-n><c-w>j
     tnoremap <C-k> <c-\><c-n><c-w>k
     tnoremap <C-l> <c-\><c-n><c-w>l
-    " automatically go to insert mode when entering a terminal mode window
-    autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
     " <C-w><C-w> is the other way to move around windows, but stay in terminal
     " mode
 endif
-
-
-" INSERT mode remaps... useful for completing a snippet field before moving to
+" }}}
+" INSERT MODE REMAPS {{{
+" ... useful for completing a snippet field before moving to
 " next field while staying in insert mode
 
 " Replace line with Range from insert mode.
@@ -257,32 +282,47 @@ inoremap b <C-O>b
 " Go to end of line in insert mode, like some terminals. This might not work
 " in some terminals
 inoremap <C-E> <C-O>$
-
-" --------------------------------------------------------------------------------
-" configure editor with tabs and nice stuff...
-" --------------------------------------------------------------------------------
-
+" }}}
+" VIM OPTION SETTINGS {{{
 set t_Co=256 "256 Terminal colors for vim airline
 
+set omnifunc=syntaxcomplete#Complete
 set expandtab           " enter spaces when tab is pressed
 set tabstop=4           " use 4 spaces to represent tab
 set colorcolumn=120     " add colored line at 80 char
 set softtabstop=4
 set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
-
-
 set wildmenu
 set wildmode=longest,list
 set listchars=eol:⏎,tab:»-,trail:·,nbsp:⎵
 set list
 set mouse=a
+set modelines=3
 
 " highlight search
 set hlsearch
 hi Search ctermbg=LightYellow
 hi Search ctermfg=Red
 
+" make backspaces more powerfull
+set backspace=indent,eol,start
+set ruler               " show line and column number
+syntax on               " syntax highlighting
+set showcmd             " show (partial) command in status line
+set number              " Show current line number
+"
+" always scroll to show some lines below cursor
+set scrolloff=5
+
+" Set up persistent undo to save more undo history
+if has("persistent_undo")
+    set undodir=~/.vim/undodir
+    set undofile
+endif
+
+" }}}
+" AUTOCOMMANDS {{{
 au BufRead,BufNewFile *.py set expandtab
 au BufRead,BufNewFile *.smk set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
@@ -299,11 +339,16 @@ set foldlevelstart=20 "start with folds open
 autocmd Syntax c,cpp,vim,xml,html,xhtml,snakemake setlocal foldmethod=syntax
 autocmd Syntax c,cpp,vim,xml,html,xhtml,perl,snakemake normal zR
 
-set runtimepath+=~/.vim/my-snippets/
+" automatically go to insert mode when entering a terminal mode window
+autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
 
-" Damian Conway's Die Blinkënmatchen: highlight matches
-nnoremap <silent> n n:call HLNext(0.1)<cr>
-nnoremap <silent> N N:call HLNext(0.1)<cr>
+" Nvim-R IDE like windows if NewTab or VimEnter on R files. Relies on ; for
+" localleader
+autocmd TabNew,VimEnter * if count(['r','rmd'],&filetype) | :execute "normal \<Plug>RStart" | endif
+" Atuomatically Quit R when VimLeave
+autocmd VimLeave * if exists("g:SendCmdToR") && string(g:SendCmdToR) != "function('SendCmdToR_fake')" | call RQuit("nosave") | endif
+" }}}
+" CUSTOM FUNCTIONS {{{
 function! HLNext (blinktime)
   let target_pat = '\c\%#'.@/
   let ring = matchadd('ErrorMsg', target_pat, 101)
@@ -312,19 +357,6 @@ function! HLNext (blinktime)
   call matchdelete(ring)
   redraw
 endfunction
-
-" make backspaces more powerfull
-set backspace=indent,eol,start
-
-set ruler               " show line and column number
-syntax on               " syntax highlighting
-set showcmd             " show (partial) command in status line
-set number              " Show current line number
-"
-" always scroll to show some lines below cursor
-set scrolloff=5
-
-" FUNCTIONS
 "
 " function and to toggle relative and absolute number
 function! NumberToggle()
@@ -353,27 +385,8 @@ function! ToggleYCM()
         let g:ycm_auto_trigger=1
     endif
 endfunc
-
-" OTHER THINGS
-if has("persistent_undo")
-    set undodir=~/.vim/undodir
-    set undofile
-endif
-
-" custom ctags
-let g:tagbar_type_r = {
-    \ 'ctagstype' : 'r',
-    \ 'kinds'     : [
-        \ 'f:Functions',
-        \ 'g:GlobalVariables',
-        \ 'v:FunctionVariables',
-    \ ]
-\ }
-
-let g:tagbar_type_snakemake = {
-    \ 'ctagstype' : 'snakemake',
-    \ 'kinds'     : [
-        \ 'r:rules',
-    \ ]
-\ }
-
+" }}}
+" OTHER {{{
+" This modeline should be within last 3 lines of file
+" vim:foldmethod=marker:foldlevel=0
+" }}}
