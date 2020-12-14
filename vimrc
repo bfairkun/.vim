@@ -38,6 +38,8 @@ Plugin 'vim-scripts/CycleColor'
 Plugin 'vim-airline/vim-airline'
 Plugin 'mbbill/undotree'
 Plugin 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/'}
+Plugin 'preservim/tagbar'
+Plugin 'jalvesaq/Nvim-R'
 if v:version == 801 && has('python3')
     Plugin 'bfairkun/YouCompleteMe'
 endif
@@ -95,17 +97,28 @@ let g:camelcasemotion_key = '<leader>'
 " Github style markdown previews. Uses python grip to render markdown
 let vim_markdown_preview_github=1
 
-" insert comment characters at column 1 regardless of indentation.
-" let g:commentary_startofline = 1
-
 let g:NERDTreeNodeDelimiter = "\u00a0"
 
+" Use R 3.4.3 on midway
+let R_path = '/software/R-3.4.3-el7-x86_64/bin/'
+" Always open console in horizontal split below
+let R_rconsole_width = 0
+let R_rconsole_height = 15
+" Open Rmd rendered to html automatically
+let R_openhtml = 1
+" Rmd chunk header syntax highlighting
+let rrst_syn_hl_chunk = 1
+let rmd_syn_hl_chunk = 1
+
+
+" let R_user_maps_only = 1
 
 " REMAPS
 
 let mapleader = ","
+let maplocalleader = ";"
 
-:imap kj <Esc>
+imap kj <Esc>
 
 " Change dir to current file's dir
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
@@ -125,6 +138,9 @@ nnoremap <leader>g<left> :diffget //2
 " get right window (merge copy) into working copy
 nnoremap <leader>g<right> :diffget //3
 
+"bidirectional easymotion search for letter. Ex: To search for 'r', do '\r'
+nmap \ <Plug>(easymotion-s)
+
 " slime remaps
 xmap <leader>s <Plug>SlimeRegionSend
 nmap <leader>s <Plug>SlimeParagraphSend
@@ -136,11 +152,32 @@ nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
 nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
 
+
+" nvim-R remaps
+" Send code to R console
+vmap <localleader><Space> <Plug>RDSendSelection
+nmap <localleader><Space> <Plug>RSendMotion
+" kill command in R console
+nnoremap <localleader>rk <Plug>:Rstop<CR>
+
 " Toggle undo tree
 nnoremap <leader>u :UndotreeToggle<CR>
 
+" search and replace
+nnoremap <leader>/ :%s///gc<Left><Left><Left><Left>
+
 " clear search
 map <leader><space> :let @/=''<cr>
+
+" Edit in place with shell command
+" Mnemonic is 'C' for command
+nnoremap <leader>C :%!<space>
+
+" Useful for working with tab separated files...
+" Expand tabs to spaces to visually align
+nnoremap <leader>S :%!<space>column<space>-t<CR>
+" Collapse spaces to tabs
+nnoremap <leader>T :%s/ \+/\t/g<CR>
 
 " Cycle through colorschemes
 nnoremap <leader>c<right> :CycleColorNext<cr>
@@ -190,8 +227,6 @@ map <space> <Plug>(easymotion-prefix)
 nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
 " repeat previous command in tmux pane 2
 nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
-" cancel command in tmux pane 1
-nnoremap <leader>c :!tmux send-keys -t 1 C-c <CR><CR>
 
 " Zoom in to window, and zoom out to equalize windows
 nnoremap Zz <c-w>_ \| <c-w>\|
@@ -199,6 +234,51 @@ nnoremap Zo <c-w>=
 
 " delete to black hole register
 nnoremap <leader>d "_d
+
+nnoremap <leader>t :TagbarToggle<CR>
+
+"hit qq to record, q to stop recording, and Q to apply macro
+nnoremap Q @q
+vnoremap Q :norm @q<cr>
+
+" Terminal mode remaps only for vim 8+ or neovim
+if has('nvim') ||  v:version >= 801
+    " Go to normal mode from terminal mode
+    tnoremap <Esc> <C-\><C-n>
+    " Switch windows from terminal mode
+    tnoremap <C-h> <c-\><c-n><c-w>h
+    tnoremap <C-j> <c-\><c-n><c-w>j
+    tnoremap <C-k> <c-\><c-n><c-w>k
+    tnoremap <C-l> <c-\><c-n><c-w>l
+    " automatically go to insert mode when entering a terminal mode window
+    autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
+    " <C-w><C-w> is the other way to move around windows, but stay in terminal
+    " mode
+endif
+
+
+" INSERT mode remaps... useful for completing a snippet field before moving to
+" next field while staying in insert mode
+
+" Replace line with Range from insert mode.
+inoremap RR <C-O>dd<up><C-O>:t.<left><left>
+
+" Open new line in insert mode
+inoremap OO <C-O>o
+
+" Go beginning of line in insert mode, like some terminals.
+inoremap <C-A> <C-O>0
+
+" Jump right word in insert mode, like some terminals
+inoremap f <C-O>w
+
+" Jump left word in insert mode, like some terminals. This might not work in
+" some terminals
+inoremap b <C-O>b
+
+" Go to end of line in insert mode, like some terminals. This might not work
+" in some terminals
+inoremap <C-E> <C-O>$
 
 " --------------------------------------------------------------------------------
 " configure editor with tabs and nice stuff...
@@ -230,6 +310,12 @@ au BufRead,BufNewFile *.smk set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
+
+" Comment strings for snakemake filetype
+autocmd FileType snakemake setlocal commentstring=#\ %s
+
+" snakemake is also python filetype (useful for autocompletion plugin)
+au BufRead,BufNewFile Snakefile,*.smk set filetype=snakemake.python
 
 set foldlevelstart=20 "start with folds open
 autocmd Syntax c,cpp,vim,xml,html,xhtml,snakemake setlocal foldmethod=syntax
@@ -295,3 +381,21 @@ if has("persistent_undo")
     set undodir=~/.vim/undodir
     set undofile
 endif
+
+" custom ctags
+let g:tagbar_type_r = {
+    \ 'ctagstype' : 'r',
+    \ 'kinds'     : [
+        \ 'f:Functions',
+        \ 'g:GlobalVariables',
+        \ 'v:FunctionVariables',
+    \ ]
+\ }
+
+let g:tagbar_type_snakemake = {
+    \ 'ctagstype' : 'snakemake',
+    \ 'kinds'     : [
+        \ 'r:rules',
+    \ ]
+\ }
+

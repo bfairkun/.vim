@@ -7,10 +7,8 @@ snippet rule
 		output:
 			${3:output}
 		log:
-			${4:log}
+			"logs/$1${4}.log"
 		shell:
 			"""
 			${5:shell}
 			"""
-
-
