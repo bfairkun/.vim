@@ -1,69 +1,44 @@
-" VUNDLE PLUGIN MANAGER
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-" call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'scrooloose/nerdtree'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-obsession'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-fugitive'
-Plugin 'jiangmiao/auto-pairs'
-" Plugin 'honza/vim-snippets'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'jpalardy/vim-slime.git'
-Plugin 'tibabit/vim-templates'
-Plugin 'bkad/camelcasemotion'
-Plugin 'ConradIrwin/vim-bracketed-paste'
-Plugin 'tpope/vim-rhubarb'
-Plugin 'JamshedVesuna/vim-markdown-preview'
-Plugin 'vim-scripts/CycleColor'
-Plugin 'vim-airline/vim-airline'
-Plugin 'mbbill/undotree'
-Plugin 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/'}
-Plugin 'preservim/tagbar'
-Plugin 'jalvesaq/Nvim-R'
+" Keep Plugin commands between plug#begin/end.
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-unimpaired'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-fugitive'
+Plug 'jiangmiao/auto-pairs'
+" Plug 'honza/vim-snippets'
+Plug 'easymotion/vim-easymotion'
+Plug 'jpalardy/vim-slime', {'branch': 'main'}
+Plug 'tibabit/vim-templates'
+Plug 'bkad/camelcasemotion'
+Plug 'ConradIrwin/vim-bracketed-paste'
+Plug 'tpope/vim-rhubarb'
+Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'vim-scripts/CycleColor'
+Plug 'vim-airline/vim-airline'
+Plug 'mbbill/undotree'
+Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
+Plug 'preservim/tagbar'
+Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
-    Plugin 'bfairkun/YouCompleteMe'
+    Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
 endif
 if v:version >= 802 && has('python3')
-    Plugin 'ycm-core/YouCompleteMe'
+    Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 endif
-Plugin 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+" Initialize plugin system
+call plug#end()
 
-filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 
 " SET PLUGIN PREFERENCES AND VARIABLES
@@ -209,6 +184,9 @@ map <C-o> :NERDTreeToggle<CR>
 nnoremap <leader><Up> :bnext<CR>
 nnoremap <leader><Down> :bprevious<CR>
 nnoremap <leader><Left>  :buffer #<CR>
+
+" quit
+nnoremap <leader>q :q<CR>
 
 " use pbcopy to interact with local clipboard while vim is run on remote ssh session
 vmap <C-x> :!pbcopy<CR>
