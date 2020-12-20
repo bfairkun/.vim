@@ -1,4 +1,6 @@
 " Ben's vimrc
+" Type 'zR' to open all code folds
+" ':help zo' for more about opening/closing folds
 " PLUGINS {{{
 
 " Specify a directory for plugins
@@ -35,6 +37,10 @@ if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
 endif
 if v:version >= 802 && has('python3')
+    " If this post PluginInstall hook script doesn't work, make sure it isn't
+    " using conda python. For example, if `which python` returns
+    " `/Users/benfair/anaconda3/bin/python` then you may want to try
+    " `/usr/local/bin/python3 install.py`
     Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 endif
 Plug 'SirVer/ultisnips'
