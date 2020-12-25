@@ -33,9 +33,11 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'vim-scripts/CycleColor'
 Plug 'vim-airline/vim-airline'
 Plug 'mbbill/undotree'
+Plug 'simeji/winresizer'
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
 " Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar'
+" Plug 'vim-syntastic/syntastic'
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
@@ -278,6 +280,9 @@ nnoremap <localleader>rk <Plug>:Rstop<CR>
 " Toggle undo tree
 nnoremap <leader>u :UndotreeToggle<CR>
 
+" YouCompleteMe get help doc
+nnoremap <leader>hh :YcmCompleter GetDoc<CR>
+
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
 
@@ -421,6 +426,12 @@ function! ToggleYCM()
 endfunc
 " }}}
 " OTHER {{{
+" Override things using a local file ~/.vimrc_local if exists
+let $LOCALFILE=expand("~/.vimrc_local")
+if filereadable($LOCALFILE)
+    source $LOCALFILE
+endif
+
 " This modeline should be within last 3 lines of file
 " vim:foldmethod=marker:foldlevel=0
 " }}}
