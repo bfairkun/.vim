@@ -19,6 +19,9 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
+Plug 'morhetz/gruvbox'
+Plug 'nanotech/jellybeans.vim'
+Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
 Plug 'easymotion/vim-easymotion'
 Plug 'jpalardy/vim-slime', {'branch': 'main'}
@@ -30,9 +33,11 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'vim-scripts/CycleColor'
 Plug 'vim-airline/vim-airline'
 Plug 'mbbill/undotree'
+Plug 'simeji/winresizer'
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
+" Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar'
-Plug 'scrooloose/syntastic'
+" Plug 'vim-syntastic/syntastic'
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
@@ -75,6 +80,16 @@ let g:ycm_autoclose_preview_window_after_completion = 0
 " map the auto-pairs toggle
 let g:AutoPairsShortcutToggle = '<leader>a'
 
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_light = 'soft'
+
+let g:jellybeans_overrides = {
+\    'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
+\}
+if has('termguicolors') && &termguicolors
+    let g:jellybeans_overrides['background']['guibg'] = 'none'
+endif
+
 " move through camel case words with leader
 let g:camelcasemotion_key = '<leader>'
 
@@ -87,6 +102,9 @@ let g:tmpl_search_paths = ['~/.vim/templates']
 " Then you start a new file using the template with :e My.Example
 
 let g:NERDTreeNodeDelimiter = "\u00a0"
+
+" Disable csv plugin maps
+let g:no_csv_maps = 1
 
 " Use R 3.4.3 on midway
 let R_path = '/software/R-3.4.3-el7-x86_64/bin/'
@@ -131,46 +149,6 @@ imap kj <Esc>
 
 " Change dir to current file's dir
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
-
-" fugitive remaps
-" git status
-nnoremap <leader>gs :G<CR>
-" git commit
-nnoremap <leader>gc :Gcommit -v<CR>
-nnoremap <leader>gm :Gmove<Space>
-nnoremap <leader>gb :Git branch<Space>
-nnoremap <leader>go :Git checkout<Space>
-
-" vimdiff remaps to resolve merge conflicts
-" get left window (HEAD copy) into working copy
-nnoremap <leader>g<left> :diffget //2
-" get right window (merge copy) into working copy
-nnoremap <leader>g<right> :diffget //3
-
-"bidirectional easymotion search for letter. Ex: To search for 'r', do '\r'
-nmap \ <Plug>(easymotion-s)
-
-" slime remaps
-xmap <leader>s <Plug>SlimeRegionSend
-nmap <leader>s <Plug>SlimeParagraphSend
-nmap <leader>sl <Plug>SlimeLineSend
-nmap <leader>sc :SlimeConfig<cr>
-nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
-" slime send full file and return cursor to position
-nmap <leader>sa mzggvG<leader>s`z
-" slime send kill ctl-c
-nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
-
-" nvim-R remaps
-" Send code to R console
-vmap <localleader><Space> <Plug>RDSendSelection
-nmap <localleader><Space> <Plug>RSendMotion
-" kill command in R console
-nnoremap <localleader>rk <Plug>:Rstop<CR>
-
-" Toggle undo tree
-nnoremap <leader>u :UndotreeToggle<CR>
-
 " search and replace
 nnoremap <leader>/ :%s///gc<Left><Left><Left><Left>
 
@@ -205,25 +183,36 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 
-" remap view invisible whitespace toggle
-noremap <leader>i :set list!<CR>
-
 " list loaded buffers
 nnoremap gb :ls<CR>:b<Space>
 
 " List contents of all registers (that typically contain pasteable text).
 nnoremap <silent> "" :registers "0123456789abcdefghijklmnopqrstuvwxyz*+.<CR>
 
-" toggle NerdTree file explorer
-map <C-o> :NERDTreeToggle<CR>
-
 " cycle through buffers
 nnoremap <leader><Up> :bnext<CR>
 nnoremap <leader><Down> :bprevious<CR>
 nnoremap <leader><Left>  :buffer #<CR>
 
+" Zoom in to window, and zoom out to equalize windows
+nnoremap Zz <c-w>_ \| <c-w>\|
+nnoremap Zo <c-w>=
+
 " quit
 nnoremap <leader>q :q<CR>
+nnoremap <leader>Q :q!<CR>
+
+" close buffer
+nnoremap <leader>x :bd<CR>
+nnoremap <leader>X :bd!<CR>
+
+" delete to black hole register
+nnoremap <leader>d "_d
+
+" repeat previous command in tmux pane 1
+nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
+" repeat previous command in tmux pane 2
+nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
 
 " use pbcopy to interact with local clipboard while vim is run on remote ssh session
 if executable('pbcopy')
@@ -236,23 +225,6 @@ endif
 nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
 nnoremap <leader>Y :call ToggleYCM()<cr>
-
-" remap easy motion prefix
-map <space> <Plug>(easymotion-prefix)
-
-" repeat previous command in tmux pane 1
-nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
-" repeat previous command in tmux pane 2
-nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
-
-" Zoom in to window, and zoom out to equalize windows
-nnoremap Zz <c-w>_ \| <c-w>\|
-nnoremap Zo <c-w>=
-
-" delete to black hole register
-nnoremap <leader>d "_d
-
-nnoremap <leader>t :TagbarToggle<CR>
 
 "hit qq to record, q to stop recording, and Q to apply macro
 nnoremap Q @q
@@ -270,6 +242,62 @@ if has('nvim') ||  v:version >= 801
     " <C-w><C-w> is the other way to move around windows, but stay in terminal
     " mode
 endif
+
+" }}}
+" PLUGIN COMMAND REMAPS{{{
+
+" fugitive remaps
+" git status
+nnoremap <leader>gs :G<CR>
+" git commit
+nnoremap <leader>gc :Gcommit -v<CR>
+nnoremap <leader>gm :Gmove<Space>
+nnoremap <leader>gb :Git branch<Space>
+nnoremap <leader>go :Git checkout<Space>
+
+" vimdiff remaps to resolve merge conflicts
+" get left window (HEAD copy) into working copy
+nnoremap <leader>g<left> :diffget //2
+" get right window (merge copy) into working copy
+nnoremap <leader>g<right> :diffget //3
+
+" slime remaps
+xmap <leader>s <Plug>SlimeRegionSend
+nmap <leader>s <Plug>SlimeParagraphSend
+nmap <leader>sl <Plug>SlimeLineSend
+nmap <leader>sc :SlimeConfig<cr>
+nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
+" slime send full file and return cursor to position
+nmap <leader>sa mzggvG<leader>s`z
+" slime send kill ctl-c
+nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
+
+" nvim-R remaps
+" Send code to R console
+vmap <localleader><Space> <Plug>REDSendSelection
+nmap <localleader><Space> <Plug>RSendMotion
+" Send paragraph, like my slime remap
+nmap <localleader>s<CR> <Plug>REDSendParagraph
+
+" kill command in R console
+nnoremap <localleader>rk <Plug>:Rstop<CR>
+
+" Toggle undo tree
+nnoremap <leader>u :UndotreeToggle<CR>
+
+" YouCompleteMe get help doc
+nnoremap <leader>hh :YcmCompleter GetDoc<CR>
+
+" remap easy motion prefix
+map <space> <Plug>(easymotion-prefix)
+
+"bidirectional easymotion search for letter. Ex: To search for 'r', do '\r'
+nmap \ <Plug>(easymotion-s)
+
+" toggle NerdTree file explorer
+map <C-o> :NERDTreeToggle<CR>
+
+nnoremap <leader>t :TagbarToggle<CR>
 " }}}
 " INSERT MODE REMAPS {{{
 " ... useful for completing a snippet field before moving to
@@ -312,11 +340,13 @@ set list
 set mouse=a
 set ttymouse=xterm2
 set modelines=3
+set background=dark
 
 " highlight search
 set hlsearch
-hi Search ctermbg=LightYellow
-hi Search ctermfg=Red
+" hi Search ctermbg=LightYellow
+" hi Search ctermfg=Red
+highlight Normal ctermbg=255
 
 " make backspaces more powerfull
 set backspace=indent,eol,start
@@ -341,6 +371,7 @@ au BufRead,BufNewFile *.smk set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
+autocmd vimenter * ++nested colorscheme gruvbox
 
 " Comment strings for snakemake filetype
 autocmd FileType snakemake setlocal commentstring=#\ %s
@@ -348,9 +379,10 @@ autocmd FileType snakemake setlocal commentstring=#\ %s
 " snakemake is also python filetype (useful for autocompletion plugin)
 au BufRead,BufNewFile Snakefile,*.smk set filetype=snakemake.python
 
-set foldlevelstart=20 "start with folds open
-autocmd Syntax c,cpp,vim,xml,html,xhtml,snakemake setlocal foldmethod=syntax
-autocmd Syntax c,cpp,vim,xml,html,xhtml,perl,snakemake normal zR
+set foldlevelstart=20
+"start with syntax folds open for * filetypes
+autocmd Syntax * setlocal foldmethod=syntax
+autocmd Syntax * normal zR
 
 " automatically go to insert mode when entering a terminal mode window
 autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
@@ -400,6 +432,12 @@ function! ToggleYCM()
 endfunc
 " }}}
 " OTHER {{{
+" Override things using a local file ~/.vimrc_local if exists
+let $LOCALFILE=expand("~/.vimrc_local")
+if filereadable($LOCALFILE)
+    source $LOCALFILE
+endif
+
 " This modeline should be within last 3 lines of file
 " vim:foldmethod=marker:foldlevel=0
 " }}}
