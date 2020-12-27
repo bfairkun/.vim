@@ -32,6 +32,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'mbbill/undotree'
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
 Plug 'preservim/tagbar'
+Plug 'scrooloose/syntastic'
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
@@ -79,6 +80,11 @@ let g:camelcasemotion_key = '<leader>'
 
 " Github style markdown previews. Uses python grip to render markdown
 let vim_markdown_preview_github=1
+
+" Search for custom templates here
+let g:tmpl_search_paths = ['~/.vim/templates']
+" If you make a template named ~/.vim/templates/My.Example.template
+" Then you start a new file using the template with :e My.Example
 
 let g:NERDTreeNodeDelimiter = "\u00a0"
 
@@ -304,6 +310,7 @@ set wildmode=longest,list
 set listchars=eol:⏎,tab:»-,trail:·,nbsp:⎵
 set list
 set mouse=a
+set ttymouse=xterm2
 set modelines=3
 
 " highlight search

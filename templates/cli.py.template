@@ -1,0 +1,51 @@
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
+# vim:fenc=utf-8
+######################################################################
+# @author      : benfair (benfair@Bens-MacBook-Air.local)
+# @file        : cli
+# @created     : Saturday Dec 26, 2020 16:47:20 EST
+#
+# @description : 
+######################################################################
+"""
+Docstring
+"""
+
+import sys
+import os
+import argparse
+
+def cmdline_args(Args=None):
+    p = argparse.ArgumentParser(
+            description=__doc__,
+            formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("PositionalRequiredArg",
+            metavar="<Metavar>")
+            help= "",
+    p.add_argument("--NamedRequiredArgumentWithChoices",
+            choices=["A", "B"],
+            required=True,
+            default="A",
+            help="default: %(default)s")
+    p.add_argument("--Flag",
+            help="",
+            action='store_true')
+    p.add_argument("-v", "--verbosity", type=int, choices=[0,1,2], default=0,
+            help="increase output verbosity (default: %(default)s)")
+    return(p.parse_args(Args))
+
+def main(some_args):
+    pass
+
+if __name__ == '__main__':
+    # I like to script and debug with an interactive interpreter. If using
+    # interactive interpreter, parse_args with hardcoded args below
+    if(sys.ps1):
+        Args = ["--NamedRequiredArgumentWithChoices", "A", "--Flag", "-v", "1", "MyPositionalArg"]
+        args = cmdline_args(Args=Args)
+    else:
+        args = cmdline_args()
+    print(vars(args))
+    main(args)
+
