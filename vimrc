@@ -37,7 +37,6 @@ Plug 'simeji/winresizer'
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
 " Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar'
-" Plug 'vim-syntastic/syntastic'
 Plug 'dense-analysis/ale'
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
@@ -96,6 +95,12 @@ let g:camelcasemotion_key = '<leader>'
 
 " Github style markdown previews. Uses python grip to render markdown
 let vim_markdown_preview_github=1
+
+" ale settings linters and fixers
+let g:ale_linters = {'python': ['flake8']}
+let g:ale_fixers = {'*': [''], 'python': ['black']}
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
 
 " Search for custom templates here
 let g:tmpl_search_paths = ['~/.vim/templates']
