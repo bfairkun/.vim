@@ -38,6 +38,7 @@ Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'s
 " Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar'
 " Plug 'vim-syntastic/syntastic'
+Plug 'dense-analysis/ale'
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
