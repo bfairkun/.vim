@@ -1,1 +1,5 @@
 .netrwhist
+
+#Ignore anything in plugged but not the gitkeep to make sure git keeps the folder
+plugged/**
+!plugged/.gitkeep
