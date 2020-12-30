@@ -81,7 +81,7 @@ let g:ycm_autoclose_preview_window_after_completion = 0
 let g:AutoPairsShortcutToggle = '<leader>a'
 
 let g:gruvbox_contrast_dark = 'hard'
-let g:gruvbox_contrast_light = 'soft'
+let g:gruvbox_contrast_light = 'hard'
 
 let g:jellybeans_overrides = {
 \    'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
@@ -294,6 +294,10 @@ nnoremap <leader>u :UndotreeToggle<CR>
 " YouCompleteMe get help doc
 nnoremap <leader>hh :YcmCompleter GetDoc<CR>
 
+" ALE Toggle
+nnoremap <leader>A :ALEToggle<CR>
+nnoremap <leader>Af :ALEFix<CR>
+
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
 
@@ -363,6 +367,10 @@ set number              " Show current line number
 "
 " always scroll to show some lines below cursor
 set scrolloff=5
+
+if v:version > 703 || v:version == 703 && has("patch541")
+  set formatoptions+=j " Delete comment character when joining commented lines
+endif
 
 " Set up persistent undo to save more undo history
 if has("persistent_undo")
