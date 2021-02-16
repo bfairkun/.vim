@@ -21,23 +21,22 @@ Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'morhetz/gruvbox'
 Plug 'nanotech/jellybeans.vim'
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
 Plug 'easymotion/vim-easymotion'
 Plug 'jpalardy/vim-slime', {'branch': 'main'}
 Plug 'tibabit/vim-templates'
 Plug 'bkad/camelcasemotion'
 Plug 'ConradIrwin/vim-bracketed-paste'
-Plug 'tpope/vim-rhubarb'
-Plug 'JamshedVesuna/vim-markdown-preview'
-Plug 'vim-scripts/CycleColor'
+Plug 'tpope/vim-rhubarb', {'on': 'GBrowse'}
+Plug 'JamshedVesuna/vim-markdown-preview', { 'for':'markdown' }
 Plug 'vim-airline/vim-airline'
 Plug 'mbbill/undotree'
 Plug 'simeji/winresizer'
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
 " Plug 'chrisbra/csv.vim'
-Plug 'preservim/tagbar'
-Plug 'dense-analysis/ale'
+Plug 'preservim/tagbar', {'on': 'TagbarToggle'}
+Plug 'dense-analysis/ale', {'for': ['r', 'rmd', 'python', 'snakemake']}
 Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd']}
 if v:version == 801 && has('python3')
     Plug 'bfairkun/YouCompleteMe', {'commit':'d98f896',  'do': './install.py' }
@@ -169,18 +168,18 @@ nnoremap <leader>/ :%s///gc<Left><Left><Left><Left>
 nnoremap <leader><space> :let @/=''<cr>
 
 " Edit in place with shell command
-" Mnemonic is 'C' for command
-nnoremap <leader>C :%!<space>
+" Mnemonic is 'E' for execute command
+" Useful with awk, grep, sort, commands
+nnoremap <leader>E :%!<space>
+
+" Change color scheme
+nnoremap <leader>C :colorscheme<space>
 
 " Useful for working with tab separated files...
 " Expand tabs to spaces to visually align
 nnoremap <leader>S :%!<space>column<space>-t<CR>
 " Collapse spaces to tabs
 nnoremap <leader>T :%s/ \+/\t/g<CR>
-
-" Cycle through colorschemes
-nnoremap <leader>c<right> :CycleColorNext<cr>
-nnoremap <leader>c<left> :CycleColorPrev<cr>
 
 " Damian Conway's Die Blinkënmatchen: highlight matches
 nnoremap <silent> n n:call HLNext(0.1)<cr>
@@ -202,9 +201,7 @@ nnoremap gb :ls<CR>:b<Space>
 " List contents of all registers (that typically contain pasteable text).
 nnoremap <silent> "" :registers "0123456789abcdefghijklmnopqrstuvwxyz*+.<CR>
 
-" cycle through buffers
-nnoremap <leader><Up> :bnext<CR>
-nnoremap <leader><Down> :bprevious<CR>
+" Back to previous buffer
 nnoremap <leader><Left>  :buffer #<CR>
 
 " Zoom in to window, and zoom out to equalize windows
@@ -357,6 +354,8 @@ set list
 set mouse=a
 set ttymouse=xterm2
 set modelines=3
+" colorscheme default
+colorscheme gruvbox
 set background=dark
 
 " highlight search
@@ -392,7 +391,8 @@ au BufRead,BufNewFile *.smk set expandtab
 au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
-autocmd vimenter * ++nested colorscheme gruvbox
+
+" autocmd vimenter * ++nested colorscheme gruvbox
 
 " Comment strings for snakemake filetype
 autocmd FileType snakemake setlocal commentstring=#\ %s
