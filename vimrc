@@ -97,10 +97,14 @@ let g:camelcasemotion_key = '<leader>'
 let vim_markdown_preview_github=1
 
 " ale settings linters and fixers
+let g:ale_lint_on_enter = 0
 let g:ale_linters = {'python': ['flake8']}
-let g:ale_fixers = {'*': [''], 'python': ['black']}
+let g:ale_fixers = {'*': [''], 'python': ['black'] }
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
+
+" vim was crashing on my mac unless I added this
+let g:UltiSnipsUsePythonVersion = 2
 
 " Search for custom templates here
 let g:tmpl_search_paths = ['~/.vim/templates']
@@ -151,6 +155,9 @@ let mapleader = ","
 let maplocalleader = ";"
 " }}}
 " NORMAL+VISUAL MODE REMAPS {{{
+" A custom function to show all remaps defined in vimrc
+nnoremap <leader>M :ShowVimrcMaps<CR>
+
 imap kj <Esc>
 
 " Change dir to current file's dir
@@ -159,7 +166,7 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 nnoremap <leader>/ :%s///gc<Left><Left><Left><Left>
 
 " clear search
-map <leader><space> :let @/=''<cr>
+nnoremap <leader><space> :let @/=''<cr>
 
 " Edit in place with shell command
 " Mnemonic is 'C' for command
@@ -268,22 +275,22 @@ nnoremap <leader>g<left> :diffget //2
 nnoremap <leader>g<right> :diffget //3
 
 " slime remaps
-xmap <leader>s <Plug>SlimeRegionSend
-nmap <leader>s <Plug>SlimeParagraphSend
-nmap <leader>sl <Plug>SlimeLineSend
-nmap <leader>sc :SlimeConfig<cr>
-nmap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
+xnoremap <leader>s <Plug>SlimeRegionSend
+nnoremap <leader>s <Plug>SlimeParagraphSend
+nnoremap <leader>sl <Plug>SlimeLineSend
+nnoremap <leader>sc :SlimeConfig<cr>
+nnoremap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " slime send full file and return cursor to position
 nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
-nmap <leader>sk :SlimeSend0 "<c-c>"<CR>
+nnoremap <leader>sk :SlimeSend0 "<c-c>"<CR>
 
 " nvim-R remaps
 " Send code to R console
-vmap <localleader><Space> <Plug>REDSendSelection
-nmap <localleader><Space> <Plug>RSendMotion
+vnoremap <localleader><Space> <Plug>REDSendSelection
+nnoremap <localleader><Space> <Plug>RSendMotion
 " Send paragraph, like my slime remap
-nmap <localleader>s<CR> <Plug>REDSendParagraph
+nnoremap <localleader>s<CR> <Plug>REDSendParagraph
 
 " kill command in R console
 nnoremap <localleader>rk <Plug>:Rstop<CR>
@@ -406,6 +413,12 @@ autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | en
 autocmd TabNew,VimEnter * if count(['r','rmd'],&filetype) | :execute "normal \<Plug>RStart" | endif
 " Atuomatically Quit R when VimLeave
 autocmd VimLeave * if exists("g:SendCmdToR") && string(g:SendCmdToR) != "function('SendCmdToR_fake')" | call RQuit("nosave") | endif
+
+" Hackish way of getting snakefmt (not supported by ALE) to run if snakefile.
+"  Note that snakefiles are also python, so subject to black fixer
+if executable('snakefmt')
+    au FileType snakemake let b:ale_python_black_executable = 'snakefmt'
+endif
 " }}}
 " CUSTOM FUNCTIONS {{{
 function! HLNext (blinktime)
@@ -425,6 +438,26 @@ function! NumberToggle()
         set relativenumber
     endif
 endfunc
+
+function! s:ShowVimrcMaps()
+  let old_reg = getreg("a")          " save the current content of register a
+  let old_reg_type = getregtype("a") " save the type of the register as well
+try
+  redir @a                           " redirect output to register a
+  " Get the list of all key mappings silently, satisfy "Press ENTER to continue"
+  silent verbose map | call feedkeys("\<CR>")
+  redir END                          " end output redirection
+  vnew                               " new buffer in vertical window
+  put a                              " put content of register
+  " Sort on 4th character column which is the key(s)
+  %!grep -B1 'vimrc' | grep -v 'vimrc' | grep -v '\-\-' | sort -k1.4,1.4
+
+finally                              " Execute even if exception is raised
+  call setreg("a", old_reg, old_reg_type) " restore register a
+endtry
+endfunction
+com! ShowVimrcMaps call s:ShowVimrcMaps()      " Enable :ShowVimrcMaps to call the function
+
 
 function! ToggleMouse()
     " check if mouse is enabled
@@ -446,6 +479,10 @@ function! ToggleYCM()
 endfunc
 " }}}
 " OTHER {{{
+" Add to register
+
+
+
 " Override things using a local file ~/.vimrc_local if exists
 let $LOCALFILE=expand("~/.vimrc_local")
 if filereadable($LOCALFILE)
