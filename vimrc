@@ -24,7 +24,8 @@ Plug 'nanotech/jellybeans.vim'
 " Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
 Plug 'easymotion/vim-easymotion'
-Plug 'jpalardy/vim-slime', {'branch': 'main'}
+Plug 'jpalardy/vim-slime', {'branch': 'main' }
+Plug 'mileszs/ack.vim', {'on': 'Ack'}
 Plug 'tibabit/vim-templates'
 Plug 'bkad/camelcasemotion'
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -58,7 +59,7 @@ call plug#end()
 
 " slime plugin preferences
 let g:slime_target = "tmux"
-let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
+let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
 let g:slime_no_mappings = 1
 
 " To make YouCompleteMe play nice with Ultisnips, use Ctl-N Ctl-P for
@@ -272,9 +273,9 @@ nnoremap <leader>g<left> :diffget //2
 nnoremap <leader>g<right> :diffget //3
 
 " slime remaps
-xnoremap <leader>s <Plug>SlimeRegionSend
-nnoremap <leader>s <Plug>SlimeParagraphSend
-nnoremap <leader>sl <Plug>SlimeLineSend
+xmap <leader>s <Plug>SlimeRegionSend
+nmap <leader>s <Plug>SlimeParagraphSend
+nmap <leader>sl <Plug>SlimeLineSend
 nnoremap <leader>sc :SlimeConfig<cr>
 nnoremap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " slime send full file and return cursor to position
@@ -299,8 +300,13 @@ nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <leader>hh :YcmCompleter GetDoc<CR>
 
 " ALE Toggle
-nnoremap <leader>A :ALEToggle<CR>
-nnoremap <leader>Af :ALEFix<CR>
+" Mnemonic: l for linting toggle
+nnoremap <leader>l :ALEToggle<CR>
+" Mnemonic: f for fix
+nnoremap <leader>f :ALEFix<CR>
+
+" Ack search
+nnoremap <leader>A :Ack 
 
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
@@ -341,7 +347,7 @@ inoremap <C-E> <C-O>$
 set t_Co=256 "256 Terminal colors for vim airline
 
 set omnifunc=syntaxcomplete#Complete
-set expandtab           " enter spaces when tab is pressed
+" set expandtab           " enter spaces when tab is pressed
 set tabstop=4           " use 4 spaces to represent tab
 set colorcolumn=120     " add colored line at 80 char
 set softtabstop=4
@@ -404,6 +410,8 @@ set foldlevelstart=20
 "start with syntax folds open for * filetypes
 autocmd Syntax * setlocal foldmethod=syntax
 autocmd Syntax * normal zR
+
+autocmd FileType text setlocal noexpandtab
 
 " automatically go to insert mode when entering a terminal mode window
 autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
