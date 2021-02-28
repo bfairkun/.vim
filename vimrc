@@ -20,8 +20,8 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'morhetz/gruvbox'
-Plug 'nanotech/jellybeans.vim'
-" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'nanotech/jellybeans.vim'
+Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
 Plug 'easymotion/vim-easymotion'
 Plug 'jpalardy/vim-slime', {'branch': 'main' }
@@ -32,8 +32,8 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'tpope/vim-rhubarb', {'on': 'GBrowse'}
 Plug 'JamshedVesuna/vim-markdown-preview', { 'for':'markdown' }
 Plug 'vim-airline/vim-airline'
-Plug 'mbbill/undotree'
-Plug 'simeji/winresizer'
+Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
+Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
 " Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar', {'on': 'TagbarToggle'}
