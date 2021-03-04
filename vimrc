@@ -20,6 +20,8 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'jiangmiao/auto-pairs'
 Plug 'morhetz/gruvbox'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 " Plug 'nanotech/jellybeans.vim'
 Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
@@ -256,6 +258,18 @@ endif
 
 " }}}
 " PLUGIN COMMAND REMAPS{{{
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Other mappings from fzf.vim plugin
+" which bring up a popup window to search something
+nnoremap gB :Buffers<CR>
+nnoremap gF :Files<CR>
+nnoremap gS :Snippets<CR>
+nnoremap gH :Helptags<CR>
 
 " fugitive remaps
 " git status
