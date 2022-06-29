@@ -22,6 +22,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'dhruvasagar/vim-zoom'
 " Plug 'nanotech/jellybeans.vim'
 Plug 'christoomey/vim-tmux-navigator'
 " Plug 'honza/vim-snippets'
@@ -37,6 +38,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'mbbill/undotree', {'on': 'UndotreeToggle'}
 Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
 Plug 'https://github.com/snakemake/snakemake.git', {'rtp': 'misc/vim/', 'for':'snakemake'}
+" Plug 'snakemake/snakefmt', {'for':'snakemake'}
+" The above plugin didn't work for me. I made an autocommand to do the job
 " Plug 'chrisbra/csv.vim'
 Plug 'preservim/tagbar', {'on': 'TagbarToggle'}
 Plug 'dense-analysis/ale', {'for': ['r', 'rmd', 'python', 'snakemake']}
@@ -63,6 +66,7 @@ call plug#end()
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
 let g:slime_no_mappings = 1
+let g:slime_preserve_curpos = 0
 
 " To make YouCompleteMe play nice with Ultisnips, use Ctl-N Ctl-P for
 " YouCompleteMe autocompletion, and use Tab to expand and move through
@@ -101,9 +105,11 @@ let vim_markdown_preview_github=1
 " ale settings linters and fixers
 let g:ale_lint_on_enter = 0
 let g:ale_linters = {'python': ['flake8']}
-let g:ale_fixers = {'*': [''], 'python': ['black'] }
+let g:ale_fixers = {'*': ['trim_whitespace'], 'python': ['black']}
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 0
 
 " vim was crashing on my mac unless I added this
 let g:UltiSnipsUsePythonVersion = 2
@@ -132,6 +138,8 @@ let R_clear_line = 1
 let R_objbr_place = 'console,right'
 " Open object browser and move to window up after starting R
 let R_after_start = [':execute "normal ;ro"', ':wincmd k']
+" don't remap anything to '<-' assign operator
+let R_assign = 0
 
 " custom ctags
 let g:tagbar_type_r = {
@@ -166,6 +174,11 @@ imap kj <Esc>
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 " search and replace
 nnoremap <leader>/ :%s///gc<Left><Left><Left><Left>
+vnoremap <leader>/ :s///gc<Left><Left><Left><Left>
+
+" Add text object for between forward slashes. 'ci/' for 'change inside /'
+onoremap <silent> i/ :<C-U>normal! T/vt/<CR>
+onoremap <silent> a/ :<C-U>normal! F/vf/<CR>
 
 " clear search
 nnoremap <leader><space> :let @/=''<cr>
@@ -221,6 +234,7 @@ nnoremap <leader>X :bd!<CR>
 
 " delete to black hole register
 nnoremap <leader>d "_d
+vmap P "_dP
 
 " repeat previous command in tmux pane 1
 nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
@@ -238,6 +252,8 @@ endif
 nnoremap <leader>m :call ToggleMouse()<cr>
 nnoremap <leader>n :call NumberToggle()<cr>
 nnoremap <leader>Y :call ToggleYCM()<cr>
+nnoremap <leader>F :call ToggleFixOnSave()<cr>
+
 
 "hit qq to record, q to stop recording, and Q to apply macro
 nnoremap Q @q
@@ -291,11 +307,15 @@ xmap <leader>s <Plug>SlimeRegionSend
 nmap <leader>s <Plug>SlimeParagraphSend
 nmap <leader>sl <Plug>SlimeLineSend
 nnoremap <leader>sc :SlimeConfig<cr>
+" slime send a certain line range
 nnoremap <leader>sr :SlimeSend<Left><Left><Left><Left><Left><Left><Left><Left><Left>
 " slime send full file and return cursor to position
 nmap <leader>sa mzggvG<leader>s`z
 " slime send kill ctl-c
 nnoremap <leader>sk :SlimeSend0 "<c-c>"<CR>
+" Toggle slime ipython mode. If running an ipython interpreter, this will help
+" indented blocks get pasted properly
+nnoremap <leader>sp :call ToggleIpythonModeSlime()<cr>
 
 " nvim-R remaps
 " Send code to R console
@@ -303,6 +323,9 @@ vnoremap <localleader><Space> <Plug>REDSendSelection
 nnoremap <localleader><Space> <Plug>RSendMotion
 " Send paragraph, like my slime remap
 nnoremap <localleader>s<CR> <Plug>REDSendParagraph
+" Send selection or paragraph, like Rstudio. Only for R filetype
+au FileType r,rmd vnoremap <buffer> <C-CR> <Plug>REDSendSelection
+au FileType r,rmd nnoremap <buffer> <C-CR> <Plug>REDSendParagraph
 
 " kill command in R console
 nnoremap <localleader>rk <Plug>:Rstop<CR>
@@ -320,7 +343,7 @@ nnoremap <leader>l :ALEToggle<CR>
 nnoremap <leader>f :ALEFix<CR>
 
 " Ack search
-nnoremap <leader>A :Ack 
+nnoremap <leader>A :Ack
 
 " remap easy motion prefix
 map <space> <Plug>(easymotion-prefix)
@@ -332,6 +355,10 @@ nmap \ <Plug>(easymotion-s)
 map <C-o> :NERDTreeToggle<CR>
 
 nnoremap <leader>t :TagbarToggle<CR>
+
+" toggle window zoom
+nmap <leader>z <Plug>(zoom-toggle)
+
 " }}}
 " INSERT MODE REMAPS {{{
 " ... useful for completing a snippet field before moving to
@@ -361,12 +388,13 @@ inoremap <C-E> <C-O>$
 set t_Co=256 "256 Terminal colors for vim airline
 
 set omnifunc=syntaxcomplete#Complete
-" set expandtab           " enter spaces when tab is pressed
+set expandtab           " enter spaces when tab is pressed
 set tabstop=4           " use 4 spaces to represent tab
 set colorcolumn=120     " add colored line at 80 char
 set softtabstop=4
 set shiftwidth=4        " number of spaces to use for auto indent
 set autoindent          " copy indent from current line when starting a new line
+set commentstring=#\ %s
 set wildmenu
 set wildmode=longest,list
 set listchars=eol:⏎,tab:»-,trail:·,nbsp:⎵
@@ -406,11 +434,8 @@ endif
 
 " }}}
 " AUTOCOMMANDS {{{
-au BufRead,BufNewFile *.py set expandtab
-au BufRead,BufNewFile *.smk set expandtab
-au BufRead,BufNewFile *.c set noexpandtab
-au BufRead,BufNewFile *.h set noexpandtab
-au BufRead,BufNewFile Makefile* set noexpandtab
+au BufRead,BufNewFile *.py setlocal expandtab
+au BufRead,BufNewFile *.smk setlocal expandtab
 
 " autocmd vimenter * ++nested colorscheme gruvbox
 
@@ -425,21 +450,29 @@ set foldlevelstart=20
 autocmd Syntax * setlocal foldmethod=syntax
 autocmd Syntax * normal zR
 
+let g:csv_default_delim='\t' 
+let g:csv_delim_test = ',;|\\t'
+
 autocmd FileType text setlocal noexpandtab
+au BufNewFile,BufRead *.tsv
+            \ setlocal filetype=csv |
+            \ setlocal noexpandtab
+            " :Delimiter \t
 
 " automatically go to insert mode when entering a terminal mode window
 autocmd BufWinEnter,WinEnter * if &buftype == 'terminal' | silent! normal A | endif
 
 " Nvim-R IDE like windows if NewTab or VimEnter on R files. Relies on ; for
 " localleader
-autocmd TabNew,VimEnter * if count(['r','rmd'],&filetype) | :execute "normal \<Plug>RStart" | endif
+" autocmd TabNew,VimEnter * if count(['r','rmd'],&filetype) | :execute "normal \<Plug>RStart" | endif
+autocmd TabNew * if count(['r','rmd'],&filetype) | :execute "normal \<Plug>RStart" | endif
 " Atuomatically Quit R when VimLeave
 autocmd VimLeave * if exists("g:SendCmdToR") && string(g:SendCmdToR) != "function('SendCmdToR_fake')" | call RQuit("nosave") | endif
 
 " Hackish way of getting snakefmt (not supported by ALE) to run if snakefile.
 "  Note that snakefiles are also python, so subject to black fixer
 if executable('snakefmt')
-    au FileType snakemake let b:ale_python_black_executable = 'snakefmt'
+    au FileType snakemake autocmd BufWritePre <buffer> call RunSnakefmt()
 endif
 " }}}
 " CUSTOM FUNCTIONS {{{
@@ -451,7 +484,14 @@ function! HLNext (blinktime)
   call matchdelete(ring)
   redraw
 endfunction
-"
+
+" function to run buffer thru snakefmt
+function! RunSnakefmt()
+    if executable('snakefmt') && (g:ale_fix_on_save == 1)
+        execute ':!snakefmt %'
+    endif
+endfunction
+
 " function and to toggle relative and absolute number
 function! NumberToggle()
     if(&relativenumber == 1)
@@ -492,11 +532,37 @@ function! ToggleMouse()
     endif
 endfunc
 
+function! ToggleFixOnSave()
+    if(g:ale_fix_on_save == 1)
+        let g:ale_fix_on_save = 0
+        echo "Will not fix on save"
+    else
+        let g:ale_fix_on_save = 1
+        echo "Will fix on save"
+    endif
+endfunc
+
 function! ToggleYCM()
     if(g:ycm_auto_trigger == 1)
         let g:ycm_auto_trigger=0
     else
         let g:ycm_auto_trigger=1
+    endif
+endfunc
+
+
+function! ToggleIpythonModeSlime()
+    if(!exists("g:slime_python_ipython"))
+        let g:slime_python_ipython=1
+        echo "Ipython slime mode"
+    else
+        if(g:slime_python_ipython == 0)
+            let g:slime_python_ipython=1
+            echo "Ipython slime mode"
+        else
+            let g:slime_python_ipython=0
+            echo "Normal slime mode"
+        endif
     endif
 endfunc
 " }}}

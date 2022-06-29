@@ -1,0 +1,18 @@
+#!/usr/bin/env Rscript
+
+######################################################################
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+#
+# @description : {{CURSOR}}
+######################################################################
+
+#Use hard coded arguments in interactive R session, else use command line args
+if(interactive()){
+    args <- scan(text=
+                 "InteractiveMode Test Args", what='character')
+} else{
+    args <- commandArgs(trailingOnly=TRUE)
+}
+
