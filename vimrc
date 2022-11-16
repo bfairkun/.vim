@@ -297,10 +297,9 @@ nnoremap <leader>gb :Git branch<Space>
 nnoremap <leader>go :Git checkout<Space>
 
 " vimdiff remaps to resolve merge conflicts
-" get left window (HEAD copy) into working copy
-nnoremap <leader>g<left> :diffget //2
-" get right window (merge copy) into working copy
-nnoremap <leader>g<right> :diffget //3
+nnoremap <leader>g<right> :diffg RE  " get from REMOTE
+nnoremap <leader>g<up> :diffg BA  " get from BASE
+nnoremap <leader>g<left> :diffg LO  " get from LOCAL
 
 " slime remaps
 xmap <leader>s <Plug>SlimeRegionSend
