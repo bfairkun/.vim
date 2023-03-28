@@ -242,10 +242,10 @@ nnoremap <leader>r :!tmux send-keys -t 1 C-p C-j <CR><CR>
 nnoremap <leader>2r :!tmux send-keys -t 2 C-p C-j <CR><CR>
 
 " use pbcopy to interact with local clipboard while vim is run on remote ssh session
-if executable('pbcopy')
-    vmap <C-x> :!pbcopy<CR>
-    vmap <C-c> :w !pbcopy<CR><CR>
-    vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy", @") \| let @"=@a<CR> <bar> "*y
+if executable('pbcopy_to_local')
+    vmap <C-x> :!pbcopy_to_local<CR>
+    vmap <C-c> :w !pbcopy_to_local<CR><CR>
+    vnoremap <silent> <leader>y :<CR>:let @a=@" \| execute "normal! vgvy" \| let res=system("pbcopy_to_local", @") \| let @"=@a<CR> <bar> "*y
 endif
 
 " custom functions that toggle something
